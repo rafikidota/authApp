@@ -19,7 +19,6 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {  }
 
   register(){
-    console.log(this.myForm.value);
     this.router.navigateByUrl('/dashboard');
   }
 }
