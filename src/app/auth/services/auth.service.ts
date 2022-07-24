@@ -22,9 +22,24 @@ export class AuthService {
   loadUser(resp: AuthResponse) {
     localStorage.setItem('token', resp.token!);
     this._user = {
+      uid: resp.uid!,
       name: resp.name!,
-      uid: resp.uid!
+      email: resp.email!
     }
+  }
+
+  register(name: string, email: string, password: string) {
+    const url = `${this.baseUrl}/auth/new`;
+    const body = { name,email, password };
+    return this.http.post<AuthResponse>(url, body).pipe(
+      tap(resp => {
+        if (resp.ok) {
+          localStorage.setItem('token', resp.token!);
+        }
+      }),
+      map(resp => resp.ok),
+      catchError(err => of(err.error.msg))
+    );
   }
 
   login(email: string, password: string) {
@@ -33,7 +48,7 @@ export class AuthService {
     return this.http.post<AuthResponse>(url, body).pipe(
       tap(resp => {
         if (resp.ok) {
-          this.loadUser(resp);
+          localStorage.setItem('token', resp.token!);        
         }
       }),
       map(resp => resp.ok),
@@ -52,6 +67,10 @@ export class AuthService {
       }),
       catchError(err => of(false))
     );
+  }
+
+  logout() {
+    localStorage.clear();
   }
 
 }

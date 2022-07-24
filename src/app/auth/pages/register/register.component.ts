@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import sweetalert from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -10,15 +12,24 @@ export class RegisterComponent implements OnInit {
 
   myForm: FormGroup = this.fb.group({
     name: ['Test 4', [Validators.required]],
-    email: ['test4@test.com', [Validators.required,Validators.email]],
+    email: ['test4@test.com', [Validators.required, Validators.email]],
     password: ['123456', [Validators.required, Validators.minLength(6)]]
   });
 
-  constructor(private fb: FormBuilder,private router: Router) { }
+  constructor(private fb: FormBuilder,
+    private router: Router,
+    private as: AuthService) { }
 
-  ngOnInit(): void {  }
+  ngOnInit(): void { }
 
-  register(){
-    this.router.navigateByUrl('/dashboard');
+  register() {
+    const { name, email, password } = this.myForm.value;
+    this.as.register(name, email, password).subscribe(ok => {
+      if (ok === true) {
+        this.router.navigateByUrl('/dashboard');
+      } else {
+        sweetalert.fire('Error', ok, 'error');
+      }
+    });
   }
 }
