@@ -11,9 +11,9 @@ import sweetalert from 'sweetalert2';
 export class RegisterComponent implements OnInit {
 
   myForm: FormGroup = this.fb.group({
-    name: ['Test 4', [Validators.required]],
-    email: ['test4@test.com', [Validators.required, Validators.email]],
-    password: ['123456', [Validators.required, Validators.minLength(6)]]
+    name: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
   constructor(private fb: FormBuilder,
